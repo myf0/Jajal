@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JASAin — Marketplace Jasa Lokal</title>
+<style>
+:root{
+  --primary:#ff7a45;--primary2:#ff9f5a;--cream:#fff8f2;--text:#242424;
+  --muted:#777;--white:#fff;--line:#eee;--green:#22a06b;
+}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);background:#fff}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.header{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#fff;position:sticky;top:0;z-index:20}
+.logo{font-size:25px;font-weight:900;color:var(--primary)}.logo span{color:#222}
+.nav{display:flex;gap:24px;align-items:center}.nav a{color:#555;text-decoration:none;font-weight:600}
+.btn{padding:11px 18px;border-radius:12px;font-weight:800}.btn-outline{background:#fff;border:1px solid #ddd}.btn-primary{background:var(--primary);color:white;box-shadow:0 7px 18px #ff7a4530}
+.hero{background:linear-gradient(110deg,#fff4e9,#fffaf6);padding:55px 5% 45px}
+.hero-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.badge{display:inline-block;background:#fff0e5;color:#e85d27;padding:8px 13px;border-radius:30px;font-size:13px;font-weight:800}
+h1{font-size:48px;line-height:1.05;margin:17px 0 15px;letter-spacing:-2px}h1 span{color:var(--primary)}
+.hero p{font-size:17px;color:#666;line-height:1.7;max-width:600px}
+.search{background:#fff;border:1px solid #eee;border-radius:17px;padding:8px;display:flex;box-shadow:0 12px 35px #b9794020;margin-top:25px;max-width:620px}
+.search input{flex:1;border:0;outline:0;padding:13px;font-size:15px}.search button{background:var(--primary);color:#fff;border-radius:12px;padding:12px 20px;font-weight:800}
+.hero-card{background:#fff;border-radius:25px;padding:18px;box-shadow:0 20px 50px #c278421f;transform:rotate(1deg)}
+.mini-map{height:280px;border-radius:18px;position:relative;overflow:hidden;background:#eaf4e8;
+background-image:linear-gradient(28deg,transparent 47%,#fff 48%,#fff 52%,transparent 53%),linear-gradient(115deg,transparent 48%,#fff 49%,#fff 52%,transparent 53%);
+background-size:170px 130px,210px 170px}
+.mini-map:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 35%,#cde5bd 0 18%,transparent 19%),radial-gradient(circle at 78% 65%,#d7eac8 0 20%,transparent 21%);opacity:.7}
+.pin{position:absolute;width:38px;height:38px;border-radius:50% 50% 50% 0;background:var(--primary);transform:rotate(-45deg);z-index:2;box-shadow:0 5px 12px #5554}
+.pin:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;left:13px;top:13px}
+.p1{left:23%;top:27%}.p2{left:58%;top:18%;background:#6c63ff}.p3{left:70%;top:65%;background:#20a46b}.p4{left:38%;top:67%;background:#f1b900}
+.map-label{position:absolute;z-index:3;background:#fff;padding:8px 11px;border-radius:10px;font-size:12px;font-weight:800;box-shadow:0 5px 15px #0001;left:18px;bottom:18px}
+.section{max-width:1200px;margin:auto;padding:48px 5%}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}
+.section h2{font-size:28px;margin:0}.section-head p{color:#777;margin:5px 0}
+.categories{display:flex;gap:12px;overflow:auto;padding-bottom:6px}
+.cat{min-width:105px;background:#fff;border:1px solid #eee;border-radius:16px;padding:15px 10px;text-align:center;box-shadow:0 5px 16px #00000006}
+.cat.active{background:#fff1e7;border-color:#ffd0b5;color:#e85d27}.cat .ico{font-size:25px;display:block;margin-bottom:8px}.cat b{font-size:12px}
+.layout{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+.map{height:570px;border-radius:24px;position:relative;overflow:hidden;background:#e9f3e4;border:1px solid #e0e8dc;
+background-image:linear-gradient(25deg,transparent 47%,#fff 48%,#fff 52%,transparent 53%),linear-gradient(112deg,transparent 47%,#fff 48%,#fff 52%,transparent 53%),linear-gradient(90deg,transparent 48%,#d9e9d1 49%,#d9e9d1 51%,transparent 52%);
+background-size:240px 170px,300px 210px,360px 250px}
+.map .road{position:absolute;height:13px;background:#fff;transform:rotate(28deg);width:900px;left:-80px;top:250px;box-shadow:0 1px 2px #aaa3}
+.map .road2{top:390px;transform:rotate(-17deg)}.map .river{position:absolute;width:110%;height:80px;background:#bfe1f2;transform:rotate(-28deg);top:60px;left:-30px;opacity:.8}
+.map-ui{position:absolute;right:16px;top:16px;display:grid;gap:7px}.map-ui button{width:40px;height:40px;border-radius:12px;background:#fff;box-shadow:0 4px 15px #0002;font-size:18px}
+.location{position:absolute;left:16px;top:16px;background:#fff;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 4px 15px #0001}
+.map .marker{position:absolute;z-index:4}.marker .bubble{background:#fff;padding:8px 10px;border-radius:11px;box-shadow:0 5px 18px #0002;font-size:11px;font-weight:800;white-space:nowrap;margin-left:14px;margin-top:-5px}.marker .dot{width:38px;height:38px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;box-shadow:0 6px 15px #0003}.marker .dot span{transform:rotate(45deg)}
+.mA{left:23%;top:28%}.mB{left:55%;top:20%}.mC{left:73%;top:57%}.mD{left:38%;top:68%}.mE{left:68%;top:34%}.mF{left:17%;top:58%}
+.list{display:grid;gap:13px;max-height:570px;overflow:auto;padding-right:3px}.card{background:#fff;border:1px solid #eee;border-radius:18px;padding:15px;display:flex;gap:13px;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:0 9px 25px #0000000d}.avatar{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:#fff0e6;flex:none}.card h3{margin:0 0 4px;font-size:15px}.meta{font-size:12px;color:#777}.rating{color:#e9a300;font-weight:800}.price{font-weight:900;margin-top:8px}.card-actions{margin-left:auto;display:flex;align-items:end}.small{padding:8px 11px;border-radius:10px;background:#fff2e9;color:#e85d27;font-weight:800;font-size:12px}
+.cta{background:linear-gradient(110deg,#ff7842,#ff9e58);color:#fff;border-radius:25px;padding:34px 38px;display:flex;justify-content:space-between;align-items:center;gap:20px}.cta h2{margin:0 0 8px}.cta p{margin:0;opacity:.9}.cta .btn{background:#fff;color:#e85d27}
+footer{padding:30px 5%;border-top:1px solid #eee;color:#777;font-size:13px;text-align:center}
+.modal{display:none;position:fixed;inset:0;background:#0006;z-index:50;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modal-box{background:#fff;border-radius:22px;padding:26px;max-width:520px;width:100%;position:relative}.close{position:absolute;right:16px;top:14px;background:#f5f5f5;border-radius:50%;width:34px;height:34px}.modal-box input,.modal-box select,.modal-box textarea{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ddd;border-radius:11px;outline:none}.modal-box textarea{min-height:80px;resize:vertical}
+.toast{position:fixed;right:20px;bottom:20px;background:#222;color:#fff;padding:13px 17px;border-radius:12px;display:none;z-index:80}
+@media(max-width:850px){.nav a{display:none}.hero-grid,.layout{grid-template-columns:1fr}.hero-card{display:none}h1{font-size:38px}.map{height:430px}.list{max-height:none}.cta{display:block}.cta .btn{margin-top:18px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">JASA<span>in</span></div>
+  <nav class="nav">
+    <a href="#cari">Cari Jasa</a><a href="#kategori">Kategori</a><a href="#peta">Peta</a>
+    <button class="btn btn-outline" onclick="openModal()">＋ Tawarkan Jasa</button>
+  </nav>
+</header>
+
+<section class="hero">
+<div class="hero-grid">
+  <div>
+    <span class="badge">✨ Jasa lokal, lebih dekat</span>
+    <h1>Butuh bantuan?<br><span>Temukan ahlinya.</span></h1>
+    <p>Temukan orang di sekitar kamu yang siap membantu. Dari guru les, guru ngaji, tukang, pijat, servis, sampai berbagai jasa lainnya.</p>
+    <div class="search">
+      <input id="searchInput" placeholder="Contoh: guru matematika, tukang AC, pijat...">
+      <button onclick="searchServices()">🔎 Cari</button>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="mini-map"><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div><div class="pin p4"></div><div class="map-label">📍 24 penyedia jasa di sekitar kamu</div></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="kategori">
+<div class="section-head"><div><h2>Mau cari jasa apa?</h2><p>Pilih kategori yang kamu butuhkan</p></div></div>
+<div class="categories">
+  <button class="cat active" onclick="filterCat('Semua',this)"><span class="ico">✨</span><b>Semua</b></button>
+  <button class="cat" onclick="filterCat('Les',this)"><span class="ico">📚</span><b>Guru Les</b></button>
+  <button class="cat" onclick="filterCat('Ngaji',this)"><span class="ico">📖</span><b>Guru Ngaji</b></button>
+  <button class="cat" onclick="filterCat('Tukang',this)"><span class="ico">🔨</span><b>Tukang</b></button>
+  <button class="cat" onclick="filterCat('Pijat',this)"><span class="ico">💆</span><b>Pijat</b></button>
+  <button class="cat" onclick="filterCat('Cleaning',this)"><span class="ico">🧹</span><b>Cleaning</b></button>
+  <button class="cat" onclick="filterCat('Teknisi',this)"><span class="ico">🔧</span><b>Teknisi</b></button>
+  <button class="cat" onclick="filterCat('Lainnya',this)"><span class="ico">➕</span><b>Lainnya</b></button>
+</div>
+</section>
+
+<section class="section" id="cari" style="padding-top:10px">
+<div class="section-head"><div><h2>Jasa di sekitar kamu</h2><p id="resultText">Menampilkan penyedia jasa terdekat</p></div><button class="btn btn-outline" onclick="useLocation()">📍 Gunakan lokasi saya</button></div>
+<div class="layout">
+  <div class="map" id="peta">
+    <div class="river"></div><div class="road"></div><div class="road road2"></div>
+    <div class="location">📍 Jombang, Jawa Timur</div>
+    <div class="map-ui"><button onclick="zoomMap(1)">＋</button><button onclick="zoomMap(-1)">−</button><button onclick="useLocation()">⌖</button></div>
+    <div class="marker mA" onclick="selectService(0)"><div class="dot"><span>📚</span></div><div class="bubble">Bu Rina • Matematika</div></div>
+    <div class="marker mB" onclick="selectService(1)"><div class="dot"><span>📖</span></div><div class="bubble">Ust. Ahmad • Ngaji</div></div>
+    <div class="marker mC" onclick="selectService(2)"><div class="dot"><span>🔨</span></div><div class="bubble">Pak Budi • Tukang</div></div>
+    <div class="marker mD" onclick="selectService(3)"><div class="dot"><span>💆</span></div><div class="bubble">Mbak Sari • Pijat</div></div>
+    <div class="marker mE" onclick="selectService(4)"><div class="dot"><span>🔧</span></div><div class="bubble">Mas Dika • AC</div></div>
+    <div class="marker mF" onclick="selectService(5)"><div class="dot"><span>🧹</span></div><div class="bubble">Bu Wati • Cleaning</div></div>
+  </div>
+  <div class="list" id="serviceList"></div>
+</div>
+</section>
+
+<section class="section">
+<div class="cta"><div><h2>Punya keahlian?</h2><p>Tawarkan jasa kamu dan dapatkan pelanggan dari sekitar.</p></div><button class="btn" onclick="openModal()">🚀 Mulai Tawarkan Jasa</button></div>
+</section>
+
+<footer>© 2026 JASAin • Platform untuk mempertemukan penyedia dan pencari jasa lokal.</footer>
+
+<div class="modal" id="modal">
+<div class="modal-box">
+<button class="close" onclick="closeModal()">×</button>
+<h2>🚀 Tawarkan Jasa</h2><p style="color:#777">Isi data singkat untuk membuat profil jasa.</p>
+<input id="name" placeholder="Nama kamu">
+<select id="category"><option>Guru Les</option><option>Guru Ngaji</option><option>Tukang</option><option>Pijat</option><option>Cleaning</option><option>Teknisi</option><option>Lainnya</option></select>
+<input id="service" placeholder="Jasa yang kamu tawarkan">
+<input id="price" placeholder="Harga mulai (contoh: Rp50.000)">
+<textarea id="desc" placeholder="Ceritakan keahlian atau pengalaman kamu"></textarea>
+<button class="btn btn-primary" style="width:100%" onclick="submitService()">Publikasikan Jasa</button>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const services=[
+{name:"Bu Rina",cat:"Les",icon:"📚",title:"Guru Les Matematika",rating:"4.9",reviews:87,distance:"0,8 km",price:"Rp50.000 / pertemuan",desc:"Guru matematika SMP–SMA, bisa datang ke rumah."},
+{name:"Ust. Ahmad",cat:"Ngaji",icon:"📖",title:"Guru Ngaji & Tahsin",rating:"4.9",reviews:63,distance:"1,2 km",price:"Rp40.000 / pertemuan",desc:"Mengajar baca Al-Qur'an, tahsin, dan dasar-dasar mengaji."},
+{name:"Pak Budi",cat:"Tukang",icon:"🔨",title:"Tukang Bangunan",rating:"4.8",reviews:51,distance:"1,7 km",price:"Rp150.000 / hari",desc:"Renovasi rumah, keramik, pengecatan dan perbaikan ringan."},
+{name:"Mbak Sari",cat:"Pijat",icon:"💆",title:"Pijat Relaksasi",rating:"4.9",reviews:42,distance:"2,1 km",price:"Rp75.000 / sesi",desc:"Pijat relaksasi ke rumah dengan jadwal yang fleksibel."},
+{name:"Mas Dika",cat:"Teknisi",icon:"🔧",title:"Servis AC & Elektronik",rating:"4.8",reviews:76,distance:"2,5 km",price:"Rp60.000 / servis",desc:"Servis AC, kipas, pompa air dan berbagai peralatan rumah."},
+{name:"Bu Wati",cat:"Cleaning",icon:"🧹",title:"Cleaning Service",rating:"4.7",reviews:34,distance:"3,0 km",price:"Rp80.000 / kunjungan",desc:"Membersihkan rumah, kos, kantor kecil dan area usaha."}
+];
+let current="Semua", mapScale=1;
+
+function render(list=services){
+ const el=document.getElementById("serviceList"); el.innerHTML="";
+ if(!list.length){el.innerHTML='<div style="padding:30px;text-align:center;color:#777">Tidak ada jasa yang cocok. Coba kata kunci lain.</div>';return}
+ list.forEach((s,i)=>{
+  el.innerHTML+=`<div class="card" id="card${i}" onclick="selectService(${services.indexOf(s)})">
+   <div class="avatar">${s.icon}</div><div style="flex:1"><h3>${s.title}</h3><div class="meta">${s.name} • <span class="rating">★ ${s.rating}</span> (${s.reviews})</div><div class="meta">📍 ${s.distance} • ${s.desc}</div><div class="price">${s.price}</div></div>
+   <div class="card-actions"><button class="small" onclick="event.stopPropagation();contact('${s.name}')">Pesan</button></div>
+  </div>`;
+ });
+}
+function filterCat(cat,btn){
+ current=cat;document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ const list=cat==="Semua"?services:services.filter(s=>s.cat===cat);render(list);
+ document.getElementById("resultText").textContent=`Menampilkan ${list.length} penyedia jasa`;
+}
+function searchServices(){
+ const q=document.getElementById("searchInput").value.toLowerCase().trim();
+ const list=services.filter(s=>(s.title+" "+s.name+" "+s.cat+" "+s.desc).toLowerCase().includes(q));
+ render(list);document.getElementById("resultText").textContent=q?`${list.length} jasa ditemukan untuk "${q}"`:"Menampilkan penyedia jasa terdekat";
+ document.getElementById("cari").scrollIntoView({behavior:"smooth"});
+}
+function selectService(i){
+ const c=document.getElementById("card"+i);if(c){c.scrollIntoView({behavior:"smooth",block:"center"});c.style.borderColor="#ff7a45";setTimeout(()=>c.style.borderColor="",900)}
+}
+function contact(name){showToast("Permintaan jasa dikirim ke "+name+" 💬")}
+function useLocation(){showToast("Lokasi kamu berhasil digunakan 📍")}
+function zoomMap(v){mapScale=Math.max(.8,Math.min(1.35,mapScale+v*.1));document.getElementById("peta").style.transform=`scale(${mapScale})`;document.getElementById("peta").style.transformOrigin="center"}
+function openModal(){document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function submitService(){
+ const n=document.getElementById("name").value.trim(),s=document.getElementById("service").value.trim();
+ if(!n||!s){showToast("Nama dan jenis jasa wajib diisi.");return}
+ closeModal();showToast("Profil jasa berhasil dibuat! 🎉");
+ ["name","service","price","desc"].forEach(id=>document.getElementById(id).value="");
+}
+function showToast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display="none",2500)}
+render();
+</script>
+</body>
+</html>
